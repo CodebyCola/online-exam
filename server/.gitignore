@@ -1,27 +1,43 @@
 *.log
 .DS_Store
+Thumbs.db
+
+# Environment
 .env
 .env.backup
 .env.production
-.phpactor.json
-.phpunit.result.cache
-/.codex
-/.cursor/
-/.idea
-/.nova
-/.phpunit.cache
-/.vscode
-/.zed
-/auth.json
-/node_modules
+!.env*.example
+
+# Laravel
 /public/build
-/public/fonts-manifest.dev.json
 /public/hot
 /public/storage
 /storage/*.key
 /storage/pail
 /vendor
+
+# Node
+/node_modules
+
+# IDE
+/.idea
+/.nova
+/.phpunit.cache
+/.vscode
+/.zed
+/.cursor
+/.codex
+.phpactor.json
+
+# Testing
+.phpunit.result.cache
+
+# Composer
+/auth.json
+
+# Laravel helper
 _ide_helper.php
+
+# OS / Homestead
 Homestead.json
 Homestead.yaml
-Thumbs.db
