@@ -7,10 +7,12 @@ services:
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_TEST_DB: ${DB_TEST_DATABASE}
     ports:
       - "${DB_PORT}:5432"
     volumes:
       - examguard_pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init-test-db.sh:/docker-entrypoint-initdb.d/init-test-db.sh
 
   redis:
     image: redis:7-alpine
