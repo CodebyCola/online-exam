@@ -1,6 +1,7 @@
 <?php
 
 namespace Tests\Feature;
+
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -71,7 +72,7 @@ class AuthTest extends TestCase
         $user = User::factory()->create([
             'password' => bcrypt('password123'),
         ]);
-        
+
         $this->postJson('/api/auth/login', [
             'email' => $user->email,
             'password' => 'password123',
@@ -82,5 +83,65 @@ class AuthTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertGuest('web');
+    }
+
+    public function test_user_dapat_register_dengan_data_valid(): void
+    {
+        $this->postJson('/api/auth/register', [
+            'name' => 'Budi Setiawan',
+            'email' => "budi@example.com",
+            'password' => 'password123',
+            'role' => 'dosen',
+        ])->assertStatus(201);
+
+        $this->assertDatabaseHas('users', [
+            'email' => 'budi@example.com',
+            'role' => 'dosen',
+        ]);
+
+        $this->assertAuthenticated();
+    }
+
+    public function test_register_gagal_jika_email_sudah_dipakai(): void
+    {
+        User::factory()->create([
+            'email' => 'sudah-ada@example.com',
+        ]);
+
+        $response = $this->postJson('/api/auth/register', [
+            'name' => 'Nama Lain',
+            'email' => 'sudah-ada@example.com',
+            'password' => 'password123',
+            'role' => 'mahasiswa',
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('email');
+    }
+
+    public function test_register_gagal_jika_role_tidak_valid(): void
+    {
+        $response = $this->postJson('/api/auth/register', [
+            'name' => 'Nama Test',
+            'email' => 'test@example.com',
+            'password' => 'password123',
+            'role' => 'admin', // bukan dosen/mahasiswa
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('role');
+    }
+
+    public function test_register_gagal_jika_field_wajib_kosong(): void
+    {
+        $response = $this->postJson('/api/auth/register', [
+            'name' => 'Nama Test',
+            // email sengaja dikosongkan
+            'password' => 'password123',
+            'role' => 'mahasiswa',
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('email');
     }
 }
