@@ -1,17 +1,4 @@
-/* =========================================================================
-   ExamGuard — Global Design Tokens & Base Styles
-   Implements DESIGN.md v1.0. Mobile-first. Tailwind v4 (@theme inline).
-
-   Read this before editing:
-   - Every value here traces back to a token in DESIGN.md. If you need a
-     new color / size / spacing value, add it here WITH a rationale comment
-     and update DESIGN.md — never hand-pick a one-off value in a component.
-   - Brass is reserved for timers, focus rings, and time-pressure states.
-     Do not reach for it as a generic accent/link/hover color.
-   - Numerals that must be trusted at a glance (timers, scores, codes,
-     timestamps) always use --font-mono + tabular-nums. Prose never does.
-   ========================================================================= */
-
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
 @import "tailwindcss";
 
 /* -------------------------------------------------------------------------
@@ -19,7 +6,6 @@
    Source Sans 3 = all reading/UI text. IBM Plex Mono = trusted numerals
    only (timer, scores, exam codes, timestamps). See DESIGN.md §4.1.
    ------------------------------------------------------------------------- */
-@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
 
 /* -------------------------------------------------------------------------
    2. COLOR TOKENS — light (default) and dark
@@ -75,8 +61,10 @@
   --focus-ring: var(--brass-500);
 
   /* Shadows — see DESIGN.md §6.3. Two only; do not add a third ad hoc. */
-  --shadow-sm: 0 1px 2px rgba(20, 24, 31, 0.06), 0 1px 1px rgba(20, 24, 31, 0.04);
-  --shadow-md: 0 4px 12px rgba(20, 24, 31, 0.1), 0 2px 4px rgba(20, 24, 31, 0.06);
+  --shadow-sm:
+    0 1px 2px rgba(20, 24, 31, 0.06), 0 1px 1px rgba(20, 24, 31, 0.04);
+  --shadow-md:
+    0 4px 12px rgba(20, 24, 31, 0.1), 0 2px 4px rgba(20, 24, 31, 0.06);
 
   /* Radius — see DESIGN.md §6.4. Scales with element size. */
   --radius-sm: 6px;
@@ -161,19 +149,21 @@
    step sizes up for desktop; never design desktop-first.
    ------------------------------------------------------------------------- */
 :root {
-  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-sans:
+    "Source Sans 3", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono:
+    "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-  --text-display: 1.75rem;    /* 28px mobile */
-  --text-title: 1.375rem;     /* 22px mobile */
+  --text-display: 1.75rem; /* 28px mobile */
+  --text-title: 1.375rem; /* 22px mobile */
   --text-subtitle: 1.0625rem; /* 17px mobile */
-  --text-body: 1rem;          /* 16px — hard floor, prevents iOS zoom-on-focus */
-  --text-body-sm: 0.875rem;   /* 14px */
-  --text-caption: 0.75rem;    /* 12px */
+  --text-body: 1rem; /* 16px — hard floor, prevents iOS zoom-on-focus */
+  --text-body-sm: 0.875rem; /* 14px */
+  --text-caption: 0.75rem; /* 12px */
 
-  --text-numeral-lg: 2rem;      /* 32px mobile — the exam timer */
-  --text-numeral-md: 1.25rem;   /* 20px mobile — scores, exam codes */
-  --text-numeral-sm: 0.875rem;  /* 14px — inline timestamps, table numerals */
+  --text-numeral-lg: 2rem; /* 32px mobile — the exam timer */
+  --text-numeral-md: 1.25rem; /* 20px mobile — scores, exam codes */
+  --text-numeral-sm: 0.875rem; /* 14px — inline timestamps, table numerals */
 
   --leading-tight: 1.2;
   --leading-snug: 1.35;
@@ -183,8 +173,8 @@
 
 @media (min-width: 768px) {
   :root {
-    --text-display: 2.25rem;   /* 36px */
-    --text-title: 1.625rem;    /* 26px */
+    --text-display: 2.25rem; /* 36px */
+    --text-title: 1.625rem; /* 26px */
     --text-subtitle: 1.125rem; /* 18px */
     --text-numeral-lg: 2.75rem; /* 44px */
     --text-numeral-md: 1.375rem; /* 22px */
@@ -195,19 +185,19 @@
    4. SPACING — 8px base grid (DESIGN.md §5)
    ------------------------------------------------------------------------- */
 :root {
-  --space-1: 0.25rem;  /* 4px */
-  --space-2: 0.5rem;   /* 8px */
-  --space-3: 0.75rem;  /* 12px */
-  --space-4: 1rem;     /* 16px */
-  --space-5: 1.25rem;  /* 20px */
-  --space-6: 1.5rem;   /* 24px */
-  --space-8: 2rem;     /* 32px */
-  --space-10: 2.5rem;  /* 40px */
-  --space-12: 3rem;    /* 48px */
-  --space-16: 4rem;    /* 64px */
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem; /* 24px */
+  --space-8: 2rem; /* 32px */
+  --space-10: 2.5rem; /* 40px */
+  --space-12: 3rem; /* 48px */
+  --space-16: 4rem; /* 64px */
 
-  --touch-target-min: 2.75rem;   /* 44px */
-  --touch-target-exam: 3rem;     /* 48px — student exam-taking flow */
+  --touch-target-min: 2.75rem; /* 44px */
+  --touch-target-exam: 3rem; /* 48px — student exam-taking flow */
 }
 
 /* -------------------------------------------------------------------------
@@ -284,23 +274,36 @@ body {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-family: var(--font-sans);
   font-weight: 600;
   color: var(--foreground);
   margin: 0;
 }
 
-h1 { font-size: var(--text-display); line-height: var(--leading-tight); }
-h2 { font-size: var(--text-title); line-height: var(--leading-tight); }
-h3 { font-size: var(--text-subtitle); line-height: var(--leading-snug); }
+h1 {
+  font-size: var(--text-display);
+  line-height: var(--leading-tight);
+}
+h2 {
+  font-size: var(--text-title);
+  line-height: var(--leading-tight);
+}
+h3 {
+  font-size: var(--text-subtitle);
+  line-height: var(--leading-snug);
+}
 
 p {
   margin: 0 0 var(--space-4) 0;
   max-width: 65ch;
 }
 
-small, .text-caption {
+small,
+.text-caption {
   font-size: var(--text-caption);
   line-height: var(--leading-caption);
 }
@@ -411,7 +414,10 @@ button {
   font-weight: 600;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    opacity 0.15s ease;
 }
 
 .btn:disabled {
@@ -654,7 +660,9 @@ button {
   border-radius: var(--radius-sm);
   background: var(--surface);
   cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .answer-option:hover {
@@ -738,7 +746,9 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
