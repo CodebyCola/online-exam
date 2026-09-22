@@ -1,12 +1,19 @@
 import { ApiError } from "./error";
 import { getXsrfToken } from "./csrf";
+import { getCsrfCookie } from "./csrf";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function apiFetch<T = unknown>(
   path: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<T> {
+  const method = options.method?.toUpperCase() ?? "GET";
+  // ambil csrf cookie otomatis untuk method yang mengubah state
+  if (method !== "GET") {
+    await getCsrfCookie();
+  }
+
   const res = await fetch(`${API_URL}${path}`, {
     ...options,
     credentials: "include",
@@ -24,7 +31,12 @@ export async function apiFetch<T = unknown>(
 
   if (!res.ok) {
     if (res.status === 422 && body?.errors) {
-      throw new ApiError(body.message ?? "Validasi gagal", 422, body.errors, body);
+      throw new ApiError(
+        body.message ?? "Validasi gagal",
+        422,
+        body.errors,
+        body,
+      );
     }
     if (res.status === 419) {
       throw new ApiError("Sesi kadaluarsa, silakan coba lagi", 419, null, body);
@@ -36,12 +48,22 @@ export async function apiFetch<T = unknown>(
       throw new ApiError(body?.message ?? "Tidak punya akses", 403, null, body);
     }
     if (res.status === 404) {
-      throw new ApiError(body?.message ?? "Data tidak ditemukan", 404, null, body);
+      throw new ApiError(
+        body?.message ?? "Data tidak ditemukan",
+        404,
+        null,
+        body,
+      );
     }
     if (res.status >= 500) {
       throw new ApiError("Terjadi kesalahan di server", res.status, null, body);
     }
-    throw new ApiError(body?.message ?? `Request gagal (${res.status})`, res.status, null, body);
+    throw new ApiError(
+      body?.message ?? `Request gagal (${res.status})`,
+      res.status,
+      null,
+      body,
+    );
   }
 
   return body as T;
