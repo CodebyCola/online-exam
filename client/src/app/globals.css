@@ -1,26 +1,747 @@
+/* =========================================================================
+   ExamGuard — Global Design Tokens & Base Styles
+   Implements DESIGN.md v1.0. Mobile-first. Tailwind v4 (@theme inline).
+
+   Read this before editing:
+   - Every value here traces back to a token in DESIGN.md. If you need a
+     new color / size / spacing value, add it here WITH a rationale comment
+     and update DESIGN.md — never hand-pick a one-off value in a component.
+   - Brass is reserved for timers, focus rings, and time-pressure states.
+     Do not reach for it as a generic accent/link/hover color.
+   - Numerals that must be trusted at a glance (timers, scores, codes,
+     timestamps) always use --font-mono + tabular-nums. Prose never does.
+   ========================================================================= */
+
 @import "tailwindcss";
 
+/* -------------------------------------------------------------------------
+   1. FONTS
+   Source Sans 3 = all reading/UI text. IBM Plex Mono = trusted numerals
+   only (timer, scores, exam codes, timestamps). See DESIGN.md §4.1.
+   ------------------------------------------------------------------------- */
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+
+/* -------------------------------------------------------------------------
+   2. COLOR TOKENS — light (default) and dark
+   See DESIGN.md §3. Names are semantic-by-role (ink/paper/line) plus three
+   reserved signal colors (green/red/blue) and one reserved accent (brass).
+   ------------------------------------------------------------------------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Ink — text */
+  --ink-950: #14181f;
+  --ink-700: #3a4150;
+  --ink-500: #63697a;
+  --ink-300: #9ca1af;
+
+  /* Paper — surfaces */
+  --paper-0: #ffffff;
+  --paper-50: #f7f6f2;
+  --paper-100: #efede6;
+
+  /* Lines */
+  --line-200: #dedbd1;
+  --line-300: #c7c3b6;
+
+  /* Brass — reserved accent: timers, focus rings, time-pressure states only */
+  --brass-600: #8a5d22;
+  --brass-500: #a6742c;
+  --brass-100: #f1e4cc;
+
+  /* Signal — success / approved / final */
+  --signal-green-700: #175e3c;
+  --signal-green-600: #1f7a4d;
+  --signal-green-100: #dceee3;
+
+  /* Signal — danger / expired / destructive */
+  --signal-red-700: #8c2c22;
+  --signal-red-600: #b23a2e;
+  --signal-red-100: #f5dfdb;
+
+  /* Signal — informational / async in-progress */
+  --signal-blue-700: #1e4e7a;
+  --signal-blue-600: #2b6ca3;
+  --signal-blue-100: #ddeaf3;
+
+  /* Semantic aliases used by components/utilities below */
+  --background: var(--paper-50);
+  --surface: var(--paper-0);
+  --surface-recessed: var(--paper-100);
+  --foreground: var(--ink-950);
+  --foreground-muted: var(--ink-700);
+  --foreground-subtle: var(--ink-500);
+  --foreground-disabled: var(--ink-300);
+  --border: var(--line-200);
+  --border-strong: var(--line-300);
+  --focus-ring: var(--brass-500);
+
+  /* Shadows — see DESIGN.md §6.3. Two only; do not add a third ad hoc. */
+  --shadow-sm: 0 1px 2px rgba(20, 24, 31, 0.06), 0 1px 1px rgba(20, 24, 31, 0.04);
+  --shadow-md: 0 4px 12px rgba(20, 24, 31, 0.1), 0 2px 4px rgba(20, 24, 31, 0.06);
+
+  /* Radius — see DESIGN.md §6.4. Scales with element size. */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 999px;
 }
 
+/* Dark mode — same token names, re-tuned values that preserve meaning and
+   relative contrast, not identical hex values. Respects OS preference by
+   default; `[data-theme="dark"]` allows a manual override/toggle. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink-950: #f3f2ee;
+    --ink-700: #c9c7bd;
+    --ink-500: #9a9c9f;
+    --ink-300: #666a70;
+
+    --paper-0: #1c2028;
+    --paper-50: #12151b;
+    --paper-100: #232833;
+
+    --line-200: #323844;
+    --line-300: #454c59;
+
+    --brass-600: #e0b567;
+    --brass-500: #c99a4e;
+    --brass-100: #3a2f1a;
+
+    --signal-green-700: #7fd8ab;
+    --signal-green-600: #4cb87f;
+    --signal-green-100: #163526;
+
+    --signal-red-700: #f0a99e;
+    --signal-red-600: #d9695a;
+    --signal-red-100: #3a2019;
+
+    --signal-blue-700: #9cc7ea;
+    --signal-blue-600: #5b9bcd;
+    --signal-blue-100: #1a2c3a;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.18);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.32), 0 2px 4px rgba(0, 0, 0, 0.24);
+  }
+}
+
+:root[data-theme="dark"] {
+  --ink-950: #f3f2ee;
+  --ink-700: #c9c7bd;
+  --ink-500: #9a9c9f;
+  --ink-300: #666a70;
+
+  --paper-0: #1c2028;
+  --paper-50: #12151b;
+  --paper-100: #232833;
+
+  --line-200: #323844;
+  --line-300: #454c59;
+
+  --brass-600: #e0b567;
+  --brass-500: #c99a4e;
+  --brass-100: #3a2f1a;
+
+  --signal-green-700: #7fd8ab;
+  --signal-green-600: #4cb87f;
+  --signal-green-100: #163526;
+
+  --signal-red-700: #f0a99e;
+  --signal-red-600: #d9695a;
+  --signal-red-100: #3a2019;
+
+  --signal-blue-700: #9cc7ea;
+  --signal-blue-600: #5b9bcd;
+  --signal-blue-100: #1a2c3a;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.18);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.32), 0 2px 4px rgba(0, 0, 0, 0.24);
+}
+
+/* -------------------------------------------------------------------------
+   3. TYPE SCALE — mobile-first (DESIGN.md §4.2). min-width media queries
+   step sizes up for desktop; never design desktop-first.
+   ------------------------------------------------------------------------- */
+:root {
+  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --text-display: 1.75rem;    /* 28px mobile */
+  --text-title: 1.375rem;     /* 22px mobile */
+  --text-subtitle: 1.0625rem; /* 17px mobile */
+  --text-body: 1rem;          /* 16px — hard floor, prevents iOS zoom-on-focus */
+  --text-body-sm: 0.875rem;   /* 14px */
+  --text-caption: 0.75rem;    /* 12px */
+
+  --text-numeral-lg: 2rem;      /* 32px mobile — the exam timer */
+  --text-numeral-md: 1.25rem;   /* 20px mobile — scores, exam codes */
+  --text-numeral-sm: 0.875rem;  /* 14px — inline timestamps, table numerals */
+
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
+  --leading-normal: 1.55;
+  --leading-caption: 1.4;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --text-display: 2.25rem;   /* 36px */
+    --text-title: 1.625rem;    /* 26px */
+    --text-subtitle: 1.125rem; /* 18px */
+    --text-numeral-lg: 2.75rem; /* 44px */
+    --text-numeral-md: 1.375rem; /* 22px */
+  }
+}
+
+/* -------------------------------------------------------------------------
+   4. SPACING — 8px base grid (DESIGN.md §5)
+   ------------------------------------------------------------------------- */
+:root {
+  --space-1: 0.25rem;  /* 4px */
+  --space-2: 0.5rem;   /* 8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-5: 1.25rem;  /* 20px */
+  --space-6: 1.5rem;   /* 24px */
+  --space-8: 2rem;     /* 32px */
+  --space-10: 2.5rem;  /* 40px */
+  --space-12: 3rem;    /* 48px */
+  --space-16: 4rem;    /* 64px */
+
+  --touch-target-min: 2.75rem;   /* 44px */
+  --touch-target-exam: 3rem;     /* 48px — student exam-taking flow */
+}
+
+/* -------------------------------------------------------------------------
+   5. BREAKPOINTS (reference only — CSS custom properties can't gate media
+   queries directly; kept here as the documented source of truth that
+   every @media rule in this file and in components must match).
+   sm: 640px · md: 768px · lg: 1024px · xl: 1280px
+   ------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------
+   6. TAILWIND THEME BRIDGE
+   Exposes the tokens above as Tailwind utilities (bg-background,
+   text-foreground, font-sans, etc.) per Tailwind v4 @theme inline.
+   ------------------------------------------------------------------------- */
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-recessed: var(--surface-recessed);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-foreground-subtle: var(--foreground-subtle);
+  --color-foreground-disabled: var(--foreground-disabled);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-brass-100: var(--brass-100);
+  --color-brass-500: var(--brass-500);
+  --color-brass-600: var(--brass-600);
+
+  --color-success-100: var(--signal-green-100);
+  --color-success-600: var(--signal-green-600);
+  --color-success-700: var(--signal-green-700);
+
+  --color-danger-100: var(--signal-red-100);
+  --color-danger-600: var(--signal-red-600);
+  --color-danger-700: var(--signal-red-700);
+
+  --color-info-100: var(--signal-blue-100);
+  --color-info-600: var(--signal-blue-600);
+  --color-info-700: var(--signal-blue-700);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-full: var(--radius-full);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* -------------------------------------------------------------------------
+   7. BASE ELEMENT STYLES
+   ------------------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: env(safe-area-inset-top, 0px);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--leading-normal);
+  min-height: 100%;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+}
+
+h1 { font-size: var(--text-display); line-height: var(--leading-tight); }
+h2 { font-size: var(--text-title); line-height: var(--leading-tight); }
+h3 { font-size: var(--text-subtitle); line-height: var(--leading-snug); }
+
+p {
+  margin: 0 0 var(--space-4) 0;
+  max-width: 65ch;
+}
+
+small, .text-caption {
+  font-size: var(--text-caption);
+  line-height: var(--leading-caption);
+}
+
+/* Numerals that must be trusted at a glance — DESIGN.md §4.1, §7.1 */
+.font-numeral,
+.tabular-nums {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Visible keyboard focus — the one non-timer place brass appears.
+   Applies to every interactive element; never remove without replacing. */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+a {
+  color: var(--signal-blue-700);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+::selection {
+  background: var(--brass-100);
+  color: var(--ink-950);
+}
+
+/* -------------------------------------------------------------------------
+   8. FORM ELEMENTS
+   Touch targets ≥44px by default, ≥48px on the exam-taking flow via
+   .exam-scope. Every input relies on a real <label> — see DESIGN.md §9.
+   ------------------------------------------------------------------------- */
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  font-size: var(--text-body); /* hard floor — prevents iOS zoom on focus */
+}
+
+.input {
+  display: block;
+  width: 100%;
+  min-height: var(--touch-target-min);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s ease;
+}
+
+.input::placeholder {
+  color: var(--foreground-subtle);
+}
+
+.input:hover {
+  border-color: var(--border-strong);
+}
+
+.input:focus-visible {
+  border-color: var(--brass-500);
+}
+
+.input[aria-invalid="true"] {
+  border-color: var(--signal-red-600);
+}
+
+.field-label {
+  display: block;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: var(--space-2);
+}
+
+.field-hint {
+  font-size: var(--text-caption);
+  color: var(--foreground-subtle);
+  margin-top: var(--space-2);
+}
+
+.field-error {
+  font-size: var(--text-caption);
+  color: var(--signal-red-700);
+  margin-top: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* -------------------------------------------------------------------------
+   9. BUTTONS
+   ------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target-min);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-body);
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--ink-950);
+  color: var(--paper-0);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--ink-700);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--foreground);
+  border-color: var(--border-strong);
+}
+.btn-secondary:hover:not(:disabled) {
+  background: var(--surface-recessed);
+}
+
+.btn-danger {
+  background: var(--signal-red-600);
+  color: var(--paper-0);
+}
+.btn-danger:hover:not(:disabled) {
+  background: var(--signal-red-700);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--foreground-muted);
+}
+.btn-ghost:hover:not(:disabled) {
+  background: var(--surface-recessed);
+}
+
+/* -------------------------------------------------------------------------
+   10. CARDS & SURFACES
+   ------------------------------------------------------------------------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: var(--space-6);
+  }
+}
+
+.surface-recessed {
+  background: var(--surface-recessed);
+  border-radius: var(--radius-sm);
+}
+
+/* -------------------------------------------------------------------------
+   11. STATUS BADGES — DESIGN.md §7.3
+   Color is always paired with icon + text label in markup; CSS only
+   supplies the treatment, never the sole meaning-carrier.
+   ------------------------------------------------------------------------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  line-height: var(--leading-caption);
+  white-space: nowrap;
+}
+
+.badge-neutral {
+  background: var(--surface-recessed);
+  color: var(--foreground-subtle);
+}
+
+.badge-success {
+  background: var(--signal-green-100);
+  color: var(--signal-green-700);
+}
+
+.badge-danger {
+  background: var(--signal-red-100);
+  color: var(--signal-red-700);
+}
+
+.badge-info {
+  background: var(--signal-blue-100);
+  color: var(--signal-blue-700);
+}
+
+.badge-active {
+  background: var(--brass-100);
+  color: var(--brass-600);
+}
+
+/* -------------------------------------------------------------------------
+   12. THE EXAM TIMER — DESIGN.md §7.1
+   Sticky on mobile, tabular numerals, no flashing/pulsing at any threshold.
+   Swap .timer--warning in at <5 minutes remaining via JS/React state.
+   ------------------------------------------------------------------------- */
+.timer {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--brass-100);
+  color: var(--brass-600);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  font-family: var(--font-mono);
+  font-size: var(--text-numeral-lg);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.timer--warning {
+  background: var(--signal-red-100);
+  color: var(--signal-red-700);
+}
+
+.timer-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-caption);
+  font-weight: 500;
+}
+
+/* -------------------------------------------------------------------------
+   13. AUTOSAVE INDICATOR — DESIGN.md §7.5
+   Three states. "Saved" is intentionally not permanent — fade handled via
+   the .autosave--settled class swapped in by JS ~2s after saving.
+   ------------------------------------------------------------------------- */
+.autosave {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-caption);
+  color: var(--foreground-subtle);
+}
+
+.autosave--saving {
+  color: var(--foreground-subtle);
+}
+
+.autosave--saved {
+  color: var(--signal-green-700);
+}
+
+.autosave--settled {
+  color: var(--foreground-subtle);
+}
+
+.autosave--error {
+  color: var(--signal-red-700);
+}
+
+/* -------------------------------------------------------------------------
+   14. AI-SUGGESTED vs FINAL SCORE — DESIGN.md §7.6 (critical pattern)
+   NEVER style an unapproved AI score with .score-final. This is the visual
+   expression of "AI assistive, not authoritative" — treat misuse as a bug.
+   ------------------------------------------------------------------------- */
+.score-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-numeral-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.score-suggested {
+  background: var(--signal-blue-100);
+  color: var(--signal-blue-700);
+}
+
+.score-suggested::before {
+  content: "AI";
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  font-weight: 700;
+  padding: 0.0625rem var(--space-1);
+  border-radius: var(--radius-sm);
+  background: var(--signal-blue-600);
+  color: var(--paper-0);
+  letter-spacing: 0.02em;
+}
+
+.score-final {
+  background: var(--signal-green-100);
+  color: var(--signal-green-700);
+}
+
+/* -------------------------------------------------------------------------
+   15. QUESTION CARD — DESIGN.md §7.2
+   ------------------------------------------------------------------------- */
+.question-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.question-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-caption);
+  color: var(--foreground-subtle);
+}
+
+.question-meta .font-numeral {
+  color: var(--foreground-muted);
+}
+
+.answer-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--touch-target-exam);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.answer-option:hover {
+  border-color: var(--border-strong);
+}
+
+.answer-option[data-selected="true"] {
+  border-color: var(--brass-500);
+  background: var(--brass-100);
+}
+
+.answer-option:has(input:focus-visible) {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* -------------------------------------------------------------------------
+   16. EXAM-TAKING SCOPE
+   Applied to the wrapper around the live exam-taking flow. Bumps minimum
+   touch targets from 44px to 48px per DESIGN.md §5, and narrows max width
+   even on desktop per DESIGN.md §6.1 (constraint reduces eye travel under
+   time pressure).
+   ------------------------------------------------------------------------- */
+.exam-scope {
+  max-width: 720px;
+  margin-inline: auto;
+  --touch-target-min: var(--touch-target-exam);
+}
+
+.exam-scope .btn,
+.exam-scope .input,
+.exam-scope .answer-option {
+  min-height: var(--touch-target-exam);
+}
+
+/* -------------------------------------------------------------------------
+   17. LAYOUT CONTAINERS
+   ------------------------------------------------------------------------- */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-inline: var(--space-6);
+  }
+}
+
+.page {
+  padding-top: var(--space-10);
+  padding-bottom: var(--space-10);
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-12);
+  }
+}
+
+.prose-measure {
+  max-width: 65ch;
+}
+
+/* -------------------------------------------------------------------------
+   18. ACCESSIBILITY UTILITIES — DESIGN.md §9
+   ------------------------------------------------------------------------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
