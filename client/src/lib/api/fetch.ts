@@ -1,6 +1,5 @@
 import { ApiError } from "./error";
-import { getXsrfToken } from "./csrf";
-import { getCsrfCookie } from "./csrf";
+import { getCsrfCookie, getXsrfToken  } from "./csrf";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
